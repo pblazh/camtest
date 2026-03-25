@@ -8,8 +8,9 @@ const cameraConstraintsList: HTMLUListElement = document.querySelector('#camera-
 const trackInfoList: HTMLOListElement = document.querySelector('#track-info')!;
 const settingsSection: HTMLElement = document.querySelector('#settings')!;
 const audioToggle: HTMLInputElement = document.querySelector('#audio-toggle')!;
+const videoSizeEl: HTMLParagraphElement = document.querySelector('#video-size')!;
 
-if (!video || !select || !errorEl || !supportedConstraintsList || !cameraConstraintsList || !trackInfoList || !settingsSection || !audioToggle) {
+if (!video || !select || !errorEl || !supportedConstraintsList || !cameraConstraintsList || !trackInfoList || !settingsSection || !audioToggle || !videoSizeEl) {
   throw new Error('Missing required DOM elements');
 }
 
@@ -241,8 +242,9 @@ async function attachCamera(deviceId: string): Promise<void> {
     const videoTrack = activeStream.getVideoTracks()[0];
     if (videoTrack) {
       const { width = 0, height = 0 } = videoTrack.getSettings();
-      video.style.width = `${width / 10}px`;
-      video.style.height = `${height / 10}px`;
+      video.style.width = `${width / 5}px`;
+      video.style.height = `${height / 5}px`;
+      videoSizeEl.textContent = `${width} × ${height}`;
     }
 
     renderTrackInfo(activeStream);
@@ -264,6 +266,7 @@ select.addEventListener('change', () => {
   } else {
     cameraConstraintsList.replaceChildren();
     trackInfoList.replaceChildren();
+    videoSizeEl.textContent = '';
     const header = settingsSection.querySelector('h2')!;
     settingsSection.replaceChildren(header);
   }
