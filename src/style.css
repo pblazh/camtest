@@ -142,9 +142,6 @@ section.settings > section input[type="checkbox"] {
 video {
   display: block;
   margin-top: 16px;
-  max-width: 480px;
-  width: 100%;
-  border-radius: 8px;
   background: #000;
 }
 

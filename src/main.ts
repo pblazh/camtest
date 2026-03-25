@@ -237,6 +237,14 @@ async function attachCamera(deviceId: string): Promise<void> {
     });
     video.srcObject = activeStream;
     await video.play();
+
+    const videoTrack = activeStream.getVideoTracks()[0];
+    if (videoTrack) {
+      const { width = 0, height = 0 } = videoTrack.getSettings();
+      video.style.width = `${width / 10}px`;
+      video.style.height = `${height / 10}px`;
+    }
+
     renderTrackInfo(activeStream);
     renderSettings(activeStream);
     errorEl.textContent = '';
