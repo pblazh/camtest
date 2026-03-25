@@ -18,6 +18,21 @@ body {
   max-width: 480px;
 }
 
+#camera-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+#camera-row label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
 #camera-select {
   width: 100%;
   padding: 8px 12px;

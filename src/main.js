@@ -6,7 +6,8 @@ const supportedConstraintsList = document.querySelector('#constraints');
 const cameraConstraintsList = document.querySelector('#camera-constraints');
 const trackInfoList = document.querySelector('#track-info');
 const settingsSection = document.querySelector('#settings');
-if (!video || !select || !errorEl || !supportedConstraintsList || !cameraConstraintsList || !trackInfoList || !settingsSection) {
+const audioToggle = document.querySelector('#audio-toggle');
+if (!video || !select || !errorEl || !supportedConstraintsList || !cameraConstraintsList || !trackInfoList || !settingsSection || !audioToggle) {
     throw new Error('Missing required DOM elements');
 }
 const SKIP_CAPABILITIES = new Set(['deviceId', 'groupId']);
@@ -212,7 +213,7 @@ async function attachCamera(deviceId) {
     try {
         activeStream = await navigator.mediaDevices.getUserMedia({
             video: { deviceId: { exact: deviceId } },
-            audio: true,
+            audio: audioToggle.checked,
         });
         video.srcObject = activeStream;
         await video.play();
@@ -225,6 +226,10 @@ async function attachCamera(deviceId) {
         showError('Unable to access the selected camera.');
     }
 }
+audioToggle.addEventListener('change', () => {
+    if (select.value)
+        attachCamera(select.value);
+});
 select.addEventListener('change', () => {
     if (select.value) {
         renderCameraConstraints();
