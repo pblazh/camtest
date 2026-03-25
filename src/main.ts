@@ -7,11 +7,10 @@ const supportedConstraintsList: HTMLUListElement = document.querySelector('#cons
 const cameraConstraintsList: HTMLUListElement = document.querySelector('#camera-constraints')!;
 const trackInfoList: HTMLOListElement = document.querySelector('#track-info')!;
 const settingsSection: HTMLElement = document.querySelector('#settings')!;
-const manualSettingsSection: HTMLElement = document.querySelector('#manual-settings')!;
 const audioToggle: HTMLInputElement = document.querySelector('#audio-toggle')!;
 const videoSizeEl: HTMLParagraphElement = document.querySelector('#video-size')!;
 
-if (!video || !select || !errorEl || !supportedConstraintsList || !cameraConstraintsList || !trackInfoList || !settingsSection || !manualSettingsSection || !audioToggle || !videoSizeEl) {
+if (!video || !select || !errorEl || !supportedConstraintsList || !cameraConstraintsList || !trackInfoList || !settingsSection || !audioToggle || !videoSizeEl) {
   throw new Error('Missing required DOM elements');
 }
 
@@ -134,25 +133,6 @@ settingsSection.addEventListener('change', (e) => {
   if (subsection) applyTrackConstraints(subsection);
 });
 
-manualSettingsSection.addEventListener('change', async () => {
-  if (!activeStream) return;
-  const videoTrack = activeStream.getVideoTracks()[0];
-  if (!videoTrack) return;
-
-  const constraints: MediaTrackConstraints = {};
-  manualSettingsSection.querySelectorAll<HTMLInputElement>('input[type="number"]').forEach((el) => {
-    if (el.value !== '') (constraints as Record<string, unknown>)[el.id] = Number(el.value);
-  });
-  const fakeEl = manualSettingsSection.querySelector<HTMLInputElement>('#fake');
-  if (fakeEl?.checked) (constraints as Record<string, unknown>)['fake'] = { exact: true };
-
-  try {
-    await videoTrack.applyConstraints(constraints);
-    errorEl.textContent = '';
-  } catch {
-    showError('Failed to apply manual settings.');
-  }
-});
 
 function renderCameraConstraints(): void {
   cameraConstraintsList.replaceChildren();
