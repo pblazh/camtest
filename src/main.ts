@@ -54,14 +54,13 @@ function createSettingRow(name: string, capability: Capability, currentValue: un
 
   const row = document.createElement('section');
 
-  const label = document.createElement('span');
-  label.textContent = name;
-  row.appendChild(label);
-
+  const header = document.createElement('span');
   const valueEl = document.createElement('span');
   valueEl.dataset.settingValue = name;
   valueEl.textContent = currentValue !== undefined ? String(currentValue) : '—';
-  row.appendChild(valueEl);
+  header.textContent = `${name}: `;
+  header.appendChild(valueEl);
+  row.appendChild(header);
 
   row.appendChild(input);
   return row;
