@@ -143,6 +143,8 @@ manualSettingsSection.addEventListener('change', async () => {
   manualSettingsSection.querySelectorAll<HTMLInputElement>('input[type="number"]').forEach((el) => {
     if (el.value !== '') (constraints as Record<string, unknown>)[el.id] = Number(el.value);
   });
+  const fakeEl = manualSettingsSection.querySelector<HTMLInputElement>('#fake');
+  if (fakeEl?.checked) (constraints as Record<string, unknown>)['fake'] = { exact: true };
 
   try {
     await videoTrack.applyConstraints(constraints);
