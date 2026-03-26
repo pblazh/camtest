@@ -66,6 +66,13 @@ function createSettingRow(name: string, capability: Capability, currentValue: un
   return row;
 }
 
+function updateVideoSize(track: MediaStreamTrack): void {
+  const { width = 0, height = 0 } = track.getSettings();
+  video.style.width = '100%';
+  video.style.aspectRatio = `${width} / ${height}`;
+  videoSizeEl.textContent = `${width} × ${height}`;
+}
+
 function updateSettingValues(subsection: HTMLElement, track: MediaStreamTrack): void {
   const settings = track.getSettings() as Record<string, unknown>;
   for (const [name, value] of Object.entries(settings)) {
@@ -97,6 +104,7 @@ async function applyTrackConstraints(subsection: HTMLElement): Promise<void> {
   try {
     await track.applyConstraints(collectConstraints(subsection));
     updateSettingValues(subsection, track);
+    if (track.kind === 'video') updateVideoSize(track);
     errorEl.textContent = '';
   } catch {
     showError(`Failed to apply constraints to ${track.kind} track.`);
@@ -239,13 +247,8 @@ async function attachCamera(deviceId: string): Promise<void> {
     video.srcObject = activeStream;
     await video.play();
 
-    const videoTrack = activeStream.getVideoTracks()[0];
-    if (videoTrack) {
-      const { width = 0, height = 0 } = videoTrack.getSettings();
-      video.style.width = `${width / 5}px`;
-      video.style.height = `${height / 5}px`;
-      videoSizeEl.textContent = `${width} × ${height}`;
-    }
+    const videoTrack = activeStream.getTracks().find((t) => t.kind === 'video');
+    if (videoTrack) updateVideoSize(videoTrack);
 
     renderTrackInfo(activeStream);
     renderSettings(activeStream);
